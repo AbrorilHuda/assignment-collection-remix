@@ -3,21 +3,37 @@ import { supabaseClient } from "../../lib/supabase";
 import { convertToWIB } from "../../lib/utils/date";
 
 export default function MyTable() {
-  const [mahasiswa, setMahasiswa] = useState();
+  const [mahasiswa, setMahasiswa] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredMahasiswa, setFilteredMahasiswa] = useState([]);
 
   useEffect(() => {
     async function fetchUsers() {
       const { data, error } = await supabaseClient
         .from("pengumpulan_mahasiswa")
         .select("*");
-      if (error) console.error("Error:", error);
-      else setMahasiswa(data);
+      if (error) {
+        console.error("Error:", error);
+      } else {
+        setMahasiswa(data || []);
+        setFilteredMahasiswa(data || []); // Tampilkan semua data awalnya
+      }
     }
-
     fetchUsers();
   }, []);
 
-  if (!mahasiswa) return <p>Loading...🔍</p>;
+  useEffect(() => {
+    if (searchTerm === "") {
+      setFilteredMahasiswa(mahasiswa); // Jika input kosong, tampilkan semua
+    } else {
+      const filtered = mahasiswa.filter((m) =>
+        m.nim.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredMahasiswa(filtered);
+    }
+  }, [searchTerm, mahasiswa]);
+
+  if (!mahasiswa.length) return <p>Loading... 🔍</p>;
 
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg p-4">
@@ -27,7 +43,9 @@ export default function MyTable() {
             type="text"
             id="table-search"
             className="block pt-2 ps-2 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Search for nim"
+            placeholder="Search for NIM"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)} // Update pencarian
           />
         </div>
       </div>
@@ -52,31 +70,36 @@ export default function MyTable() {
           </tr>
         </thead>
         <tbody>
-          {mahasiswa.map((m) => (
-            <tr
-              key={m.id}
-              className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
-            >
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                {m.nim}
-              </th>
-              <td className="px-6 py-4">{m.name}</td>
-              <td className="px-6 py-4">{m.semester}</td>
-              <td className="px-6 py-4">{convertToWIB(m.created_at)}</td>
-              <td className="px-6 py-4">
-                <a
-                  href={m.url_document}
-                  className="font-medium text-blue-600 dark:text-blue-500 hover:underline pe-2"
-                  target="_blank"
-                >
-                  view
-                </a>
+          {filteredMahasiswa.length > 0 ? (
+            filteredMahasiswa.map((m) => (
+              <tr
+                key={m.id}
+                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <th
+                  scope="row"
+                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                  {m.nim}
+                </th>
+                <td className="px-6 py-4">{m.name}</td>
+                <td className="px-6 py-4">{m.semester}</td>
+                <td className="px-6 py-4">{convertToWIB(m.created_at)}</td>
+                <td className="px-6 py-4">
+                  <a
+                    href={m.url_document}
+                    className="font-medium text-blue-600 dark:text-blue-500 hover:underline pe-2"
+                    target="_blank">
+                    view
+                  </a>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="5" className="text-center py-4">
+                ❌ Tidak ada data yang cocok dengan pencarian "{searchTerm}"
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>

@@ -44,5 +44,14 @@
   },
   "engines": {
     "node": ">=20.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AbrorilHuda/assignment-collection-remix.git"
+  },
+  "author": "Abroril Huda",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AbrorilHuda/assignment-collection-remix/issues"
   }
 }
