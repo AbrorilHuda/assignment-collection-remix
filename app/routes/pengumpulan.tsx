@@ -1,11 +1,7 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { Button, Input, Form } from "@heroui/react";
 import MyAlert from "~/components/ui/alert";
-
-type hidenType = {
-  status: boolean;
-  message?: string;
-};
+import alertType from "~/lib/types/alertype";
 
 export default function UploadForm() {
   const [name, setName] = useState<string>("");
@@ -13,24 +9,26 @@ export default function UploadForm() {
   const [semester, setSemester] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [hiden, setHiden] = useState<hidenType>({
-    status: false,
+  const [hiden, setHiden] = useState<alertType>({
+    hide: false,
     message: "",
+    color: "default",
   });
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!name && !nim && !semester) {
       setHiden({
-        status: true,
+        hide: true,
         message: "semua field harus di isi",
+        color: "warning",
       });
       return;
     }
 
     if (!file) {
       setHiden({
-        status: true,
+        hide: true,
         message: "file harus di isi",
       });
       return;
@@ -52,13 +50,24 @@ export default function UploadForm() {
       });
 
       if (response.ok) {
-        alert("Upload berhasil!");
+        setHiden({
+          hide: true,
+          message: "Berhasil di Kirim.",
+          color: "success",
+        });
         setName("");
         setNim("");
         setSemester("");
         setFile(null);
       } else {
-        alert("Upload gagal.");
+        const errorData = await response.json();
+        if (errorData.error) {
+          setHiden({
+            hide: true,
+            message: errorData.error,
+            color: "danger",
+          });
+        }
       }
     } catch (error) {
       console.error("Error saat upload:", error);
@@ -79,17 +88,19 @@ export default function UploadForm() {
       <h1 className="text-2xl font-bold mb-10 text-center">
         Form Pengumpulan Tugas
       </h1>
-      <MyAlert color="warning" hide={hiden.status} message={hiden.message} />
+      <MyAlert color={hiden.color} hide={hiden.hide} message={hiden.message} />
       <Button
-        onPress={() => setHiden({ status: false })}
+        onPress={() => setHiden({ hide: false })}
         variant="ghost"
         size="sm"
-        className={`bg-orange-500 ${!hiden.status ? "hidden" : ""}`}>
-        close message
+        className={`bg-orange-500 ${!hiden.hide ? "hidden" : ""}`}
+      >
+        close
       </Button>
       <Form
         onSubmit={handleSubmit}
-        className="space-y-4 p-5 items-center text-white">
+        className="space-y-4 p-5 items-center text-white"
+      >
         <Input
           required
           className="max-w-xs bg-gray-800 border rounded-xl"
@@ -129,12 +140,15 @@ export default function UploadForm() {
                 file:bg-blue-50 file:text-blue-700
                 hover:file:bg-blue-100"
         />
-        <p className="text-gray-500 font-mono text-xs">nb: file harus pdf</p>
+        <p className="text-gray-500 font-mono text-xs">
+          {file?.size ? `Size: ${(file?.size / (1024 * 1024)).toFixed(2)}` : ""}
+        </p>
         <Button
           type="submit"
           fullWidth
           className="bg-blue-800 rounded-md hover:bg-blue-950 text-white"
-          disabled={isLoading}>
+          disabled={isLoading}
+        >
           {isLoading ? "Loading..." : "Submit"}
         </Button>
       </Form>

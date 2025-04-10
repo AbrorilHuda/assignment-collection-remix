@@ -33,7 +33,7 @@ export default function MyTable() {
     }
   }, [searchTerm, mahasiswa]);
 
-  if (!mahasiswa.length) return <p>Loading... 🔍</p>;
+  if (!mahasiswa.length) return <p>Loading... 🔍 atau tidak ada</p>;
 
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg p-4">
@@ -74,10 +74,12 @@ export default function MyTable() {
             filteredMahasiswa.map((m) => (
               <tr
                 key={m.id}
-                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
+              >
                 <th
                   scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                >
                   {m.nim}
                 </th>
                 <td className="px-6 py-4">{m.name}</td>
@@ -87,7 +89,9 @@ export default function MyTable() {
                   <a
                     href={m.url_document}
                     className="font-medium text-blue-600 dark:text-blue-500 hover:underline pe-2"
-                    target="_blank">
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     view
                   </a>
                 </td>
@@ -96,7 +100,7 @@ export default function MyTable() {
           ) : (
             <tr>
               <td colSpan="5" className="text-center py-4">
-                ❌ Tidak ada data yang cocok dengan pencarian "{searchTerm}"
+                ❌ Tidak ada data yang cocok dengan pencarian {searchTerm}
               </td>
             </tr>
           )}
