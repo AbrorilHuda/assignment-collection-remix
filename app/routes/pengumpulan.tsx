@@ -1,4 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from "react";
+import { useNavigate } from "@remix-run/react";
 import { Button, Input, Form } from "@heroui/react";
 import MyAlert from "~/components/ui/alert";
 import alertType from "~/lib/types/alertype";
@@ -14,6 +15,7 @@ export default function UploadForm() {
     message: "",
     color: "default",
   });
+  const navigate = useNavigate();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -50,15 +52,11 @@ export default function UploadForm() {
       });
 
       if (response.ok) {
-        setHiden({
-          hide: true,
-          message: "Berhasil di Kirim.",
-          color: "success",
-        });
         setName("");
         setNim("");
         setSemester("");
         setFile(null);
+        navigate("/success");
       } else {
         const errorData = await response.json();
         if (errorData.error) {

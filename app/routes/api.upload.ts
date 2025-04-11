@@ -1,13 +1,15 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { createClient } from "@supabase/supabase-js";
-//import { supabase } from '~/lib/supabase';
+import { getSession, commitSession } from "~/lib/utils/session.server";
 
 export async function action({ request }: ActionFunctionArgs) {
   const supabase = createClient(
     process.env.SUPABASE_URL as string,
     process.env.SUPABASE_ANON_KEY as string
   );
+  // cokkie
+  const session = await getSession(request.headers.get("Cookie"));
   // Parse form data
   const formData = await request.formData();
   const name = formData.get("name") as string;
@@ -96,5 +98,15 @@ export async function action({ request }: ActionFunctionArgs) {
     return json({ error: "Gagal menyimpan data." }, { status: 500 });
   }
 
-  return json({ fileUrl }, { status: 200 });
+  session.set("uploadVerified", true);
+
+  return json(
+    { fileUrl },
+    {
+      status: 200,
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    }
+  );
 }
