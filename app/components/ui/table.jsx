@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { supabaseClient } from "../../lib/supabase";
-import { convertToWIB } from "../../lib/utils/date";
+import { supabase } from "~/lib/supabase.client";
+import { convertToWIB } from "~/lib/utils/date";
 
 export default function MyTable() {
   const [mahasiswa, setMahasiswa] = useState([]);
@@ -9,7 +9,7 @@ export default function MyTable() {
 
   useEffect(() => {
     async function fetchUsers() {
-      const { data, error } = await supabaseClient
+      const { data, error } = await supabase
         .from("pengumpulan_mahasiswa")
         .select("*");
       if (error) {

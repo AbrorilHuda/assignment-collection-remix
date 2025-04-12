@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "@remix-run/react";
-import { supabaseClient } from "~/lib/supabase";
+import { supabase } from "~/lib/supabase.client";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { LockClosedIcon, InboxIcon } from "@heroicons/react/24/outline";
 
@@ -20,7 +20,7 @@ export default function Login() {
   const onSubmit: SubmitHandler<loginType> = async (data) => {
     setError(null); // Reset error
 
-    const { error } = await supabaseClient.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email: data.email,
       password: data.password,
     });

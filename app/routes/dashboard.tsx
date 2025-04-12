@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "@remix-run/react";
-import { supabaseClient } from "~/lib/supabase";
+import { supabase } from "~/lib/supabase.client";
 import MyTable from "~/components/ui/table";
 import { User } from "@supabase/supabase-js";
 
@@ -12,7 +12,7 @@ export default function Dashboard() {
     const checkAuth = async () => {
       const {
         data: { user },
-      } = await supabaseClient.auth.getUser();
+      } = await supabase.auth.getUser();
       if (!user) {
         navigate("/login"); // Redirect jika belum login
       } else {
@@ -23,7 +23,7 @@ export default function Dashboard() {
   }, [navigate]);
 
   const handleLogout = async () => {
-    await supabaseClient.auth.signOut();
+    await supabase.auth.signOut();
     navigate("/login");
   };
 

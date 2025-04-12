@@ -1,13 +1,10 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { createClient } from "@supabase/supabase-js";
 import { getSession, commitSession } from "~/lib/utils/session.server";
-
+import { supabase } from "~/lib/supabase.server";
 export async function action({ request }: ActionFunctionArgs) {
-  const supabase = createClient(
-    process.env.SUPABASE_URL as string,
-    process.env.SUPABASE_ANON_KEY as string
-  );
+  const Supabase = supabase;
+
   // cokkie
   const session = await getSession(request.headers.get("Cookie"));
   // Parse form data
@@ -63,7 +60,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }`;
 
   // Unggah ke Supabase Storage
-  const { error } = await supabase.storage
+  const { error } = await Supabase.storage
     .from("uploads") // Ganti dengan nama bucket di Supabase
     .upload(filePath, Buffer.from(fileBuffer), {
       contentType: file.type,
@@ -76,14 +73,13 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   // Dapatkan URL file publik
-  const { data: publicUrlData } = supabase.storage
+  const { data: publicUrlData } = Supabase.storage
     .from("uploads")
     .getPublicUrl(filePath);
   const fileUrl = publicUrlData.publicUrl;
 
   // Simpan data ke tabel Supabase
-  const { error: insertError } = await supabase
-    .from("pengumpulan_mahasiswa") // Nama tabel di Supabase
+  const { error: insertError } = await Supabase.from("pengumpulan_mahasiswa") // Nama tabel di Supabase
     .insert([
       {
         name,

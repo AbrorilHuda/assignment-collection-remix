@@ -69,7 +69,11 @@ export default function UploadForm() {
       }
     } catch (error) {
       console.error("Error saat upload:", error);
-      alert("Terjadi kesalahan saat mengunggah.");
+      setHiden({
+        hide: true,
+        message: "Terjadi kesalahan saat mengunggah.",
+        color: "danger",
+      });
     } finally {
       setIsLoading(false); // Matikan loading setelah selesai
     }
