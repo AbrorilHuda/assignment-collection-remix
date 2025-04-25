@@ -26,9 +26,9 @@ export default function SuccessPage() {
     <>
       <Aurora
         colorStops={["#3A29FF", "#FF94B4", "#FF3232"]}
-        blend={0.5}
+        blend={0.9}
         amplitude={1.0}
-        speed={0.5}
+        speed={0.9}
       />
       <div className="max-w-md mx-auto p-8 text-center">
         <div className="bg-green-100 border-l-4 border-green-500 p-4 mb-6">
@@ -43,6 +43,14 @@ export default function SuccessPage() {
         >
           Kembali ke Beranda
         </Link>
+      </div>
+      <div className="absolute bottom-0 left-0 w-full h-[200px] rotate-180 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 blur-3xl opacity-50">
+        <Aurora
+          colorStops={["#3A29FF", "#FF94B4", "#FF3232"]}
+          blend={0.9}
+          amplitude={1.0}
+          speed={1.5}
+        />
       </div>
     </>
   );

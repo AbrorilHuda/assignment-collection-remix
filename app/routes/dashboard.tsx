@@ -3,6 +3,17 @@ import { useNavigate } from "@remix-run/react";
 import { supabase } from "~/lib/supabase.client";
 import MyTable from "~/components/ui/table";
 import { User } from "@supabase/supabase-js";
+import type { MetaFunction } from "@remix-run/node";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Dashboard | remix" },
+    {
+      name: "description",
+      content: "This site Dashboard",
+    },
+  ];
+};
 
 export default function Dashboard() {
   const navigate = useNavigate();

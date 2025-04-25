@@ -6,7 +6,7 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 import { HeroUIProvider } from "@heroui/react";
-import type { LinksFunction } from "@remix-run/node";
+import type { LinksFunction, MetaFunction } from "@remix-run/node";
 
 import "./tailwind.css";
 
@@ -23,6 +23,15 @@ export const links: LinksFunction = () => [
   },
 ];
 
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Pengumpulan tugas | Remix" },
+    {
+      name: "description",
+      content: "This site pengumpulan tugas",
+    },
+  ];
+};
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">

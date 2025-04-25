@@ -3,6 +3,17 @@ import { useNavigate } from "@remix-run/react";
 import { supabase } from "~/lib/supabase.client";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { LockClosedIcon, InboxIcon } from "@heroicons/react/24/outline";
+import type { MetaFunction } from "@remix-run/node";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Login | remix" },
+    {
+      name: "description",
+      content: "This site Login",
+    },
+  ];
+};
 
 type loginType = { email: string; password: string };
 
