@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "@remix-run/react";
 import { supabase } from "~/lib/supabase.client";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { LockClosedIcon, InboxIcon } from "@heroicons/react/24/outline";
+import { LockClosedIcon, AtSymbolIcon } from "@heroicons/react/24/outline";
 import type { MetaFunction } from "@remix-run/node";
 
 export const meta: MetaFunction = () => {
@@ -53,15 +53,18 @@ export default function Login() {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-2">Email</label>
+            <label htmlFor="email" className="block text-sm font-medium mb-2">
+              Email
+            </label>
             <div className="relative">
               <input
                 type="email"
                 {...register("email", { required: "Email wajib diisi" })}
                 className="w-full px-4 py-2 border rounded-md"
                 placeholder="Masukkan email"
+                id="email"
               />
-              <InboxIcon className="absolute right-3 top-3 h-5 w-5 text-gray-400" />
+              <AtSymbolIcon className="absolute right-3 top-3 h-5 w-5 text-gray-400" />
             </div>
             {errors.email && (
               <p className="text-red-500 text-sm">{errors.email.message}</p>
@@ -69,13 +72,19 @@ export default function Login() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2">Password</label>
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium mb-2"
+            >
+              Password
+            </label>
             <div className="relative">
               <input
                 type="password"
                 {...register("password", { required: "Password wajib diisi" })}
                 className="w-full px-4 py-2 border rounded-md"
                 placeholder="Masukkan password"
+                id="password"
               />
               <LockClosedIcon className="absolute right-3 top-3 h-5 w-5 text-gray-400" />
             </div>
